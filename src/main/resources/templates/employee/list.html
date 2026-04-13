@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Empleados</title>
+    <style>
+        body { font-family: Verdana, sans-serif; margin: 20px; }
+        h2 { margin-bottom: 10px; }
+        form { margin: 15px 0; }
+        table { border: 1px solid #333; border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #333; padding: 6px; }
+        th { background-color: #efefef; }
+        .acciones a { margin-right: 8px; }
+    </style>
+</head>
+<body>
+<h2>Lista de Empleados</h2>
+
+<div>
+    <a th:href="@{/employee/new}">Nuevo Empleado</a>
+</div>
+
+<form th:action="@{/employee/list}" method="get">
+    <label for="texto">Texto a buscar:</label>
+    <input type="text" id="texto" name="texto" th:value="${texto}">
+    <button type="submit">Buscar</button>
+    <a th:href="@{/employee/list}">Limpiar</a>
+</form>
+
+<p th:if="${msg != null}" th:text="${msg}" style="color:green;"></p>
+
+<table>
+    <thead>
+    <tr>
+        <th>#</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Puesto</th>
+        <th>Departamento</th>
+        <th>Ciudad</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="emp, st : ${empleados}">
+        <td th:text="${st.count}"></td>
+        <td th:text="${emp.firstName}"></td>
+        <td th:text="${emp.lastName}"></td>
+        <td th:text="${emp.job != null ? emp.job.jobTitle : ''}"></td>
+        <td th:text="${emp.department != null ? emp.department.departmentName : ''}"></td>
+        <td th:text="${emp.department != null and emp.department.location != null ? emp.department.location.city : ''}"></td>
+        <td class="acciones">
+            <a th:href="@{/employee/edit/{id}(id=${emp.employeeId})}">Editar</a>
+            <a th:href="@{/employee/delete/{id}(id=${emp.employeeId})}"
+               onclick="return confirm('¿Seguro que desea borrar este empleado?')">Borrar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

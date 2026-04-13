@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Empleado</title>
+    <style>
+        body { font-family: Verdana, sans-serif; margin: 20px; }
+        h2 { margin-bottom: 15px; }
+        form { max-width: 500px; }
+        div { margin-bottom: 12px; }
+        label { font-weight: bold; display: block; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+        button { padding: 8px 12px; margin-top: 10px; }
+        a { margin-right: 10px; }
+    </style>
+</head>
+<body>
+<h2 th:text="${modo == 'nuevo'} ? 'Nuevo Empleado' : 'Editar Empleado'"></h2>
+
+<form th:action="${actionUrl}" th:object="${employeeForm}" method="post">
+
+    <input type="hidden" th:field="*{employeeId}">
+
+    <div>
+        <label>Nombre</label>
+        <input type="text" th:field="*{firstName}">
+    </div>
+
+    <div>
+        <label>Apellido</label>
+        <input type="text" th:field="*{lastName}">
+    </div>
+
+    <div>
+        <label>Correo Electrónico</label>
+        <input type="text" th:field="*{email}">
+    </div>
+
+    <div th:if="${modo == 'nuevo'}">
+        <label>Contraseña</label>
+        <input type="password" th:field="*{password}">
+    </div>
+
+    <div>
+        <label>Puesto</label>
+        <select th:field="*{jobId}">
+            <option value="">Seleccione</option>
+            <option th:each="job : ${jobs}"
+                    th:value="${job.jobId}"
+                    th:text="${job.jobTitle}"></option>
+        </select>
+    </div>
+
+    <div>
+        <label>Sueldo</label>
+        <input type="number" step="0.01" th:field="*{salary}">
+    </div>
+
+    <div>
+        <label>Jefe</label>
+        <select th:field="*{managerId}">
+            <option value="">Seleccione</option>
+            <option th:each="m : ${managers}"
+                    th:value="${m.employeeId}"
+                    th:text="${m.firstName + ' ' + m.lastName}"></option>
+        </select>
+    </div>
+
+    <div>
+        <label>Departamento</label>
+        <select th:field="*{departmentId}">
+            <option value="">Seleccione</option>
+            <option th:each="d : ${departments}"
+                    th:value="${d.departmentId}"
+                    th:text="${d.departmentName}"></option>
+        </select>
+    </div>
+
+    <div>
+        <a th:href="@{/employee/list}">Cancelar</a>
+        <button type="submit" th:text="${modo == 'nuevo'} ? 'Registrar' : 'Actualizar'"></button>
+    </div>
+</form>
+</body>
+</html>
